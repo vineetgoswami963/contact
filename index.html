@@ -15,7 +15,27 @@
     <link rel="stylesheet" href="assets/css/owl-carousel.css">
     <link rel="stylesheet" href="assets/css/templatemo-lava.css">
     <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
-    
+    <style>
+        #notification {
+            position: fixed;
+            padding: 10px;
+            margin-top: 100px;
+     
+            border-radius: 5px;
+            z-index: 1000;
+            align-items: center;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
 </head>
 <body>
 
@@ -26,6 +46,7 @@
             <div></div>
         </div>
     </div>
+    <div id="notification"></div>
     <header class="header-area header-sticky">
         <div class="container">
             <div class="row">
@@ -51,7 +72,7 @@
 
 
     <div class="welcome-area" id="welcome">
-
+       
         <div class="header-text">
             <div class="container">
                 <div class="row">
@@ -438,6 +459,7 @@
                 <div class="footer-content">
                     <div class="row">
                         <!-- ***** Contact Form Start ***** -->
+                        
                         <div class="right-content col-lg-6 col-md-12 col-sm-12">
                             <h2>Contact <em>AANDANDAM</em></h2>
                             <p>Share ypou reviews
@@ -448,7 +470,7 @@
                         </div>
                         <div class="col-lg-6 col-md-12 col-sm-12">
                             <div class="contact-form">
-                                <form id="contact" action="send_email.php" method="post">
+                                <form id="contactForm" action="send_email.php" method="POST">
                                     <div class="row">
                                         <div class="col-md-6 col-sm-12">
                                             <fieldset>
@@ -458,7 +480,7 @@
                                         </div>
                                         <div class="col-md-6 col-sm-12">
                                             <fieldset>
-                                                <input name="email" type="text" id="email" placeholder="E-Mail Address"
+                                                <input name="email" type="email" id="email" placeholder="E-Mail Address"
                                                     required="" style="background-color: rgba(250,250,250,0.3);">
                                             </fieldset>
                                         </div>
@@ -470,8 +492,7 @@
                                         </div>
                                         <div class="col-lg-12">
                                             <fieldset>
-                                                <button type="submit" id="form-submit" class="main-button">Send Message
-                                                    Now</button>
+                                                <button type="submit" id="form-submit" class="main-button">Send Message Now</button>
                                             </fieldset>
                                         </div>
                                     </div>
@@ -501,6 +522,37 @@
     <script src="assets/js/waypoints.min.js"></script>
     <script src="assets/js/jquery.counterup.min.js"></script>
     <script src="assets/js/imgfix.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#contactForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                $.ajax({
+                    type: 'POST',
+                    url: 'send_email.php',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        showNotification(response, 'success');
+                        $('#contactForm')[0].reset();
+                    },
+                    error: function() {
+                        showNotification('An error occurred. Please try again later.', 'error');
+                    }
+                });
+            });
+    
+            function showNotification(message, type) {
+                $('#notification').text(message)
+                                   .removeClass('success error')
+                                   .addClass(type)
+                                   .fadeIn();
+                
+                setTimeout(function() {
+                    $('#notification').fadeOut();
+                }, 5000);
+            }
+        });
+        </script>
 
     <!-- Global Init -->
     <script src="assets/js/custom.js"></script>
